@@ -7,7 +7,11 @@ public class Lance {
 	
 	public Lance(Usuario usuario, double valor) {
 		this.usuario = usuario;
-		this.valor = valor;
+		if (valor <=0){
+			throw new IllegalArgumentException("Valor deve ser maior que zero.");
+		}else{
+			this.valor = valor;
+		}
 	}
 
 	public Usuario getUsuario() {

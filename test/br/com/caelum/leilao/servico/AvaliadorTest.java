@@ -2,9 +2,7 @@ package br.com.caelum.leilao.servico;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.com.caelum.leilao.builder.CriadorDeLeilao;
@@ -20,16 +18,6 @@ public class AvaliadorTest {
     private Usuario jose;
     private Usuario joao;
 
-    @BeforeClass
-    public static void testandoBeforeClass() {
-      System.out.println("before class");
-    }
-
-    @AfterClass
-    public static void testandoAfterClass() {
-      System.out.println("after class");
-    }
-    
 	@Before
 	public void setUp(){
 		this.leiloeiro = new Avaliador();
@@ -57,11 +45,17 @@ public class AvaliadorTest {
 
 	}
 
+	@Test(expected=RuntimeException.class)
+	public void leilaoDeveLancarRuntimeExceptionSeNaoHouverNenhumLance(){
+		Leilao leilao = new CriadorDeLeilao().para("Play 4").constroi();
+		
+		leiloeiro.avalia(leilao);
+	}
+	
 	@Test
 	public void avaliaMaiorEMenosLanceComApenasUmLance() {
-		Usuario joao = new Usuario("Joao");
-		Leilao leilao = new Leilao("Mesa de sinuca");
-		leilao.propoe(new Lance(joao, 200.0));
+
+		Leilao leilao = new CriadorDeLeilao().para("Mesa de sinuca").lance(jose, 200.0).constroi();
 
 		leiloeiro.avalia(leilao);
 
@@ -155,14 +149,4 @@ public class AvaliadorTest {
 		assertEquals(400.0, leiloeiro.getMaiores().get(1).getValor(), 0.00001);
 
 	}
-
-	@Test
-	public void deveDevolverListaVaziaCasoNaoHajaLances() {
-		Leilao leilao = new Leilao("Playstation 3 Novo");
-
-		leiloeiro.avalia(leilao);
-
-		assertEquals(0, leiloeiro.getMaiores().size());
-	}
-
 }
